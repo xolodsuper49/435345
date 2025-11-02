@@ -1,0 +1,82 @@
+<UserControl x:Class="TestMaster.Wpf.Views.StudentDashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:TestMaster.Wpf.Helpers">
+    
+    <UserControl.Resources>
+        <local:MoreThanZeroConverter x:Key="MoreThanZeroConverter"/>
+    </UserControl.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Заголовок "Мої тести" -->
+            <RowDefinition Height="Auto"/> <!-- Текстові підказки -->
+            <RowDefinition Height="*"/>    <!-- Список тестів -->
+            <RowDefinition Height="Auto"/> <!-- Заголовок "Мої результати" -->
+            <RowDefinition Height="*"/>    <!-- Список результатів -->
+            <RowDefinition Height="Auto"/> <!-- Кнопки -->
+        </Grid.RowDefinitions>
+
+        <!-- БЛОК "МОЇ ТЕСТИ" -->
+        <TextBlock Grid.Row="0" Text="Мої тести" FontSize="20" FontWeight="Bold"/>
+        
+        <StackPanel Grid.Row="1">
+            <TextBlock Text="Оберіть тест для проходження:" Margin="0,10,0,0">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AssignedTests.Count, Converter={StaticResource MoreThanZeroConverter}}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <TextBlock Text="Наразі у вас немає призначених тестів." Margin="0,10,0,0">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AssignedTests.Count, Converter={StaticResource MoreThanZeroConverter}}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+
+        <ListBox Grid.Row="2" ItemsSource="{Binding AssignedTests}" SelectedItem="{Binding SelectedTest}" DisplayMemberPath="Title" Margin="0,5,0,0"/>
+
+        <!-- БЛОК "МОЇ РЕЗУЛЬТАТИ" -->
+        <TextBlock Grid.Row="3" Text="Мої результати" FontSize="20" FontWeight="Bold" Margin="0,20,0,0"/>
+        
+        <ListView Grid.Row="4" ItemsSource="{Binding Attempts}" Margin="0,5,0,0">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Тест" DisplayMemberBinding="{Binding Test.Title}" Width="200"/>
+                    <GridViewColumn Header="Результат" DisplayMemberBinding="{Binding Score, StringFormat='{}{0:F0}%'}" Width="100"/>
+                    <GridViewColumn Header="Деталі" Width="150">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <Run Text="{Binding CorrectAnswers}"/>
+                                    <Run Text="/"/>
+                                    <Run Text="{Binding TotalQuestions}"/>
+                                </TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <!-- КНОПКИ -->
+        <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,10,0,0">
+            <Button Content="Проходити тест" Command="{Binding TakeTestCommand}"/>
+            <Button Content="Вийти" Command="{Binding LogoutCommand}" Margin="10,0,0,0"/>
+        </StackPanel>
+        
+    </Grid>
+</UserControl>

@@ -1,0 +1,21 @@
+﻿<Application x:Class="TestMaster.Wpf.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:TestMaster.Wpf.ViewModels"
+             xmlns:v="clr-namespace:TestMaster.Wpf.Views">
+    <Application.Resources>
+        <DataTemplate DataType="{x:Type vm:LoginViewModel}">
+            <v:LoginView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:TeacherDashboardViewModel}">
+            <v:TeacherDashboardView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:StudentDashboardViewModel}">
+            <v:StudentDashboardView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:TestTakingViewModel}">
+            <v:TestTakingView/>
+        </DataTemplate>
+        <!-- Add other templates here as needed -->
+    </Application.Resources>
+</Application>
